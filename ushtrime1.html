@@ -3,12 +3,29 @@
 
     <style>
         .snipcart-add-item{
-  margin:15px;
-  padding: 16px 32px;
-  text-align: center;
-  background-color: white; 
-  color: black; 
-  border: 2px solid #008CBA;
+
+                margin:15px;
+                padding: 16px 32px;
+                text-align: center;
+                background-color: white; 
+                color: black; 
+                border: 2px solid #008CBA;
+               }
+
+        .snipcart-user-profile , .snipcart-user-logout , .snipcart-edit-profile , .snipcart-user-profile{
+            margin:5px;
+            float: right;
+            padding: 16px 32px;
+            text-align: center;
+            background-color: white; 
+            color: black; 
+            border: 2px solid #7D33FF;
+               }
+
+      .snipcart-user-profile:hover , .snipcart-user-logout:hover , .snipcart-edit-profile:hover , .snipcart-user-profile:hover{
+        background-color: #7D33FF;
+        color: white;
+              
                }
 
 .snipcart-add-item:hover {
@@ -28,7 +45,30 @@
 
 <body>
 
-    <table>
+    <div class="snipcart-summary" style="margin:30px;">
+            <a href="#" class="snipcart-user-profile">
+                    User profile
+            </a>
+            <a href="#" class="snipcart-edit-profile">
+                    Edit profile
+            </a>
+            <a href="#" class="snipcart-user-profile">
+                    <span class="snipcart-user-email">Login</span>
+            </a>
+            <a href="#" class="snipcart-user-logout">
+                    Logout
+            </a>
+
+    </div>
+
+<br>
+<br>
+<br>
+<br>
+
+<hr>
+<div style="text-align:center;">
+    <br>
     <button 
     class="snipcart-add-item"  
     data-item-id="100"
@@ -36,7 +76,11 @@
     data-item-price="250.00"
     data-item-weight=""
     data-item-url="/"
-    data-item-description=" Telefon">
+    data-item-description=" Telefon"
+    data-item-custom1-name="Ngjyra"
+    data-item-custom1-options="Black|Silver|Gold"
+    data-item-custom1-value="Silver"
+    data-item-custom1-required="true">
     Blej Telefon
     </button>
 
@@ -47,7 +91,11 @@
     data-item-price="455.00"
     data-item-weight=""
     data-item-url="/"
-    data-item-description=" Llaptop">
+    data-item-description=" Llaptop"
+    data-item-custom1-name="Madhesia"
+    data-item-custom1-options="12'|14'|15.6'"
+    data-item-custom1-value="14'"
+    data-item-custom1-required="true">
     Blej Llaptop
     </button>
 
@@ -58,7 +106,10 @@
     data-item-price="190.00"
     data-item-weight=""
     data-item-url="/"
-    data-item-description=" Tablet ">
+    data-item-description=" Tablet "
+    data-item-custom1-name="Ngjyra"
+    data-item-custom1-options="Black|Silver|Gold"
+    data-item-custom1-value="Silver">
     Blej Tablet
     </button>
 
@@ -69,7 +120,9 @@
     data-item-price="15.50"
     data-item-weight=""
     data-item-url="/"
-    data-item-description="Mbushes telefoni">
+    data-item-description="Mbushes telefoni"
+    data-item-custom1-name="Lloji telefonit"
+    data-item-custom1-options="Samsung|iPhone|Huawei|LG|Nokia">
     Blej Mbushes telefoni
     </button>
 
@@ -84,7 +137,7 @@
     Blej Ndegjuese
     </button>
 
-
+</div>
 
 </body>
 
