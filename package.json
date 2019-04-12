@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/admirkadriuup/e-commerce/issues"
   },
-  "homepage": "https://github.com/admirkadriuup/e-commerce#readme"
+  "homepage": "https://github.com/admirkadriuup/e-commerce#readme",
+  "dependencies": {
+    "express": "^4.16.4"
+  }
 }
