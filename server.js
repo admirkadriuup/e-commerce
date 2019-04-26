@@ -1,15 +1,21 @@
-var http = require('http'),
-    fs = require('fs');
+var express = require('express');
+var app = express();
 
 
-fs.readFile('./snipcart.html', function (err, html) {
-    if (err) {
-        throw err; 
-    }    
-       
-    http.createServer(function(request, response) {  
-        response.writeHeader(200, {"Content-Type": "text/html"});  
-        response.write(html);  
-        response.end();  
-    }).listen(3000);
+app.get('/', function(req,res){
+    res.end("E-commerce");
 });
+
+app.all('/date', function(req, res){
+    res.end(Date());
+});
+
+app.get('/caclLength', function(req, res){
+    res.end(req.query.word.length.toString());
+});
+
+app.listen(3000, function(){
+    console.log("App listening on 3000")
+});
+
+app.use('/public',express.static('public')); // sherben files static
