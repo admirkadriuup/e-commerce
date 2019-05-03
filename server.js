@@ -1,26 +1,50 @@
 var express = require('express');
 var exphbs = require('express-handlebars');
+var mysql = require('mysql');
 
 var app = express();
 
-const handlebars = exphbs({defaultLayout: "main"});
+const handlebars = exphbs({ defaultLayout: "main" });
 app.engine('handlebars', handlebars);
 app.set('view engine', 'handlebars');
 
-app.get('/', function(req,res){
-    res.render("home");
+
+var con = mysql.createConnection({
+    host: "localhost",
+    user: "root",
+    password: "root",
+    database: 'e-commerce'
 });
 
-app.all('/product', function(req, res){
-    res.render("product");
+con.connect(function (err) {
+    if (err) {
+        throw err;
+    }
+
+    console.log("Connected!");
+
+    startApp();
 });
 
-app.get('/caclLength', function(req, res){
-    res.end(req.query.word.length.toString());
-});
+function startApp() {
+    app.get('/', function (req, res) {
+        res.render("home");
+    });
 
-app.listen(3000, function(){
-    console.log("App listening on 3000")
-});
+    app.all('/product', function (req, res) {
+        res.render("product");
+    });
 
-app.use('/',express.static('public')); // sherben files static
+    app.get('/product-list', function (req, res) {
+        con.query("SELECT * FROM products", function (err, result, fields) {
+            if (err) throw err;
+            res.end(JSON.stringify(result));
+        });
+    });
+
+    app.listen(3000, function () {
+        console.log("App listening on 3000")
+    });
+
+    app.use('/', express.static('public')); // sherben files static
+}
