@@ -1,13 +1,18 @@
 var express = require('express');
+var exphbs = require('express-handlebars');
+
 var app = express();
 
+const handlebars = exphbs({defaultLayout: "main"});
+app.engine('handlebars', handlebars);
+app.set('view engine', 'handlebars');
 
 app.get('/', function(req,res){
-    res.end("E-commerce");
+    res.render("home");
 });
 
-app.all('/date', function(req, res){
-    res.end(Date());
+app.all('/product', function(req, res){
+    res.render("product");
 });
 
 app.get('/caclLength', function(req, res){
@@ -18,4 +23,4 @@ app.listen(3000, function(){
     console.log("App listening on 3000")
 });
 
-app.use('/public',express.static('public')); // sherben files static
+app.use('/',express.static('public')); // sherben files static
