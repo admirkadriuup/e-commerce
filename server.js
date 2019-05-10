@@ -1,6 +1,7 @@
 var express = require('express');
 var exphbs = require('express-handlebars');
 var mysql = require('mysql');
+var productRoutes = require('./product.routes');
 
 var app = express();
 
@@ -27,6 +28,8 @@ con.connect(function (err) {
 });
 
 function startApp() {
+    app.use('/api/products', productRoutes);
+
     app.get('/', function (req, res) {
         res.render("home");
     });
