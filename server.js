@@ -9,22 +9,14 @@ app.engine('handlebars', handlebars);
 app.set('view engine', 'handlebars');
 
 app.use(bodyParser.json()); // add HTTP body to req.body
-
 app.use('/api/products', productRoutes);
 
 app.get('/', function (req, res) {
     res.render("home");
 });
 
-app.all('/product', function (req, res) {
+app.get('/product', function (req, res) {
     res.render("product");
-});
-
-app.get('/product-list', function (req, res) {
-    con.query("SELECT * FROM products", function (err, result, fields) {
-        if (err) throw err;
-        res.end(JSON.stringify(result));
-    });
 });
 
 app.listen(3000, function () {
