@@ -1,53 +1,34 @@
 var express = require('express');
 var exphbs = require('express-handlebars');
-var mysql = require('mysql');
+const bodyParser = require('body-parser');
 var productRoutes = require('./product.routes');
-
 var app = express();
 
 const handlebars = exphbs({ defaultLayout: "main" });
 app.engine('handlebars', handlebars);
 app.set('view engine', 'handlebars');
 
+app.use(bodyParser.json()); // add HTTP body to req.body
 
-var con = mysql.createConnection({
-    host: "localhost",
-    user: "root",
-    password: "root",
-    database: 'e-commerce'
+app.use('/api/products', productRoutes);
+
+app.get('/', function (req, res) {
+    res.render("home");
 });
 
-con.connect(function (err) {
-    if (err) {
-        throw err;
-    }
-
-    console.log("Connected!");
-
-    startApp();
+app.all('/product', function (req, res) {
+    res.render("product");
 });
 
-function startApp() {
-    app.use('/api/products', productRoutes);
-
-    app.get('/', function (req, res) {
-        res.render("home");
+app.get('/product-list', function (req, res) {
+    con.query("SELECT * FROM products", function (err, result, fields) {
+        if (err) throw err;
+        res.end(JSON.stringify(result));
     });
+});
 
-    app.all('/product', function (req, res) {
-        res.render("product");
-    });
+app.listen(3000, function () {
+    console.log("App listening on 3000")
+});
 
-    app.get('/product-list', function (req, res) {
-        con.query("SELECT * FROM products", function (err, result, fields) {
-            if (err) throw err;
-            res.end(JSON.stringify(result));
-        });
-    });
-
-    app.listen(3000, function () {
-        console.log("App listening on 3000")
-    });
-
-    app.use('/', express.static('public')); // sherben files static
-}
+app.use('/', express.static('public')); // sherben files static
