@@ -23,4 +23,4 @@ app.listen(3000, function () {
     console.log("App listening on 3000")
 });
 
-app.use('/', express.static('public')); // sherben files static
+app.use('/public/', express.static('public')); // sherben files static
