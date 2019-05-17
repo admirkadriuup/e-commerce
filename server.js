@@ -2,6 +2,8 @@ var express = require('express');
 var exphbs = require('express-handlebars');
 const bodyParser = require('body-parser');
 var productRoutes = require('./product.routes');
+const ProductService = require('./product.service');
+
 var app = express();
 
 const handlebars = exphbs({ defaultLayout: "main" });
@@ -15,8 +17,13 @@ app.get('/', function (req, res) {
     res.render("home");
 });
 
-app.get('/product', function (req, res) {
-    res.render("product");
+app.get('/product/:id', async function (req, res) {
+    try{
+        const product = await ProductService.getById(req.params.id);
+        res.render("product", product);
+    }catch(err){
+        res.send(err.message).end();
+    }
 });
 
 app.listen(3000, function () {

@@ -1,15 +1,16 @@
 const express = require('express');
 const router = express.Router();
-const SqlProvider = require('./sql.provider')
+const SqlProvider = require('./sql.provider');
+const ProductService = require('./product.service');
 const HTTPStatus = require('http-status');
 
 router.get('/', async function (req, res) {
-    const connection = await SqlProvider.getConnection();
-
-    const result = await connection.query('SELECT * FROM `products`');
-    const rows = result[0];
-
-    return res.send(rows);
+    try{
+        const product = await ProductService.getById(req.params.id);
+        return res.send(product);
+    }catch(err){
+        res.send(err.message).end();
+    }
 });
 
 router.post('/', async function (req, res) {
@@ -83,7 +84,12 @@ router.put('/:id', async function (req, res) {
 
     const connection = await SqlProvider.getConnection();
 
-    await connection.query('UPDATE `products` SET ? where id=?', [product,req.params.id]);
+    const result= await connection.query('UPDATE `products` SET ? where id=?', [product,req.params.id]);
+    const udpatedObject = result[0];
+
+    if (udpatedObject.affectedRows === 0) {
+        return res.send(HTTPStatus.NOT_FOUND).end();
+    }
 
     return res.send(HTTPStatus.OK).end();
 });
