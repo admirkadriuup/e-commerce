@@ -219,3 +219,15 @@
         
 	<script src="/public/js/product.js"></script>
 	<link rel="stylesheet" type="text/css" href="/public/styles/product.css">
+
+	<script>
+		fetch('/api/products/1')
+		.then(function(response) {
+			return response.json();
+		})
+		.then(function(product) {
+			debugger
+			var el = document.querySelector('.details_name');
+			el.innerHTML = product.name;
+		});
+	</script>
