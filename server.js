@@ -1,6 +1,5 @@
 var express = require('express');
 var exphbs = require('express-handlebars');
-const bodyParser = require('body-parser');
 var productRoutes = require('./product.routes');
 const ProductService = require('./product.service');
 
@@ -10,7 +9,7 @@ const handlebars = exphbs({ defaultLayout: "main" });
 app.engine('handlebars', handlebars);
 app.set('view engine', 'handlebars');
 
-app.use(bodyParser.json()); // add HTTP body to req.body
+app.use(express.json()); // add HTTP body to req.body
 app.use('/api/products', productRoutes);
 
 app.get('/', function (req, res) {
