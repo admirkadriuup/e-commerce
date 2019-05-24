@@ -5,12 +5,12 @@ const ProductService = require('./product.service');
 const HTTPStatus = require('http-status');
 
 router.get('/', async function (req, res) {
-    try{
-        const product = await ProductService.getById(req.params.id);
-        return res.send(product);
-    }catch(err){
-        res.send(err.message).end();
-    }
+    const connection = await SqlProvider.getConnection();
+
+    const result = await connection.query('SELECT * FROM `products`');
+    const rows = result[0];
+
+    return res.send(rows);
 });
 
 router.post('/', async function (req, res) {
@@ -33,10 +33,10 @@ router.post('/', async function (req, res) {
 });
 
 router.get('/:id', async function (req, res) {
-    try{
+    try {
         const product = await ProductService.getById(req.params.id);
         return res.send(product);
-    }catch(err){
+    } catch (err) {
         res.send(err.message).end();
     }
 });
@@ -65,19 +65,19 @@ router.put('/:id', async function (req, res) {
 
     const product = {}
 
-    if(req.body.name){
+    if (req.body.name) {
         product.name = req.body.name;
     }
-    if(req.body.price){
+    if (req.body.price) {
         product.price = req.body.price;
     }
-    if(req.body.weight){
+    if (req.body.weight) {
         product.weight = req.body.weight;
     }
 
     const connection = await SqlProvider.getConnection();
 
-    const result= await connection.query('UPDATE `products` SET ? where id=?', [product,req.params.id]);
+    const result = await connection.query('UPDATE `products` SET ? where id=?', [product, req.params.id]);
     const udpatedObject = result[0];
 
     if (udpatedObject.affectedRows === 0) {
@@ -85,6 +85,35 @@ router.put('/:id', async function (req, res) {
     }
 
     return res.send(HTTPStatus.OK).end();
+});
+
+
+router.post('/:id/photos', async function (req, res) {
+    if (isNaN(req.params.id) || !req.files.photo) {
+        return res.send(HTTPStatus.BAD_REQUEST).end();
+    }
+
+    const url = './public/images/products/' + req.files.photo.name;
+    req.files.photo.mv(url, async function (error) {
+        if (error) {
+            return res.send(HTTPStatus.INTERNAL_SERVER_ERROR).end();
+        }
+        const connection = await SqlProvider.getConnection();
+
+        const result = await connection.query('UPDATE `products` SET ? where id=?', [
+            {
+                thumbnailUrl: url
+            },
+            req.params.id]);
+            
+        const udpatedObject = result[0];
+
+        if (udpatedObject.affectedRows === 0) {
+            return res.send(HTTPStatus.NOT_FOUND).end();
+        }
+
+        return res.send(HTTPStatus.OK).end();
+    });
 });
 
 module.exports = router;
