@@ -33,19 +33,12 @@ router.post('/', async function (req, res) {
 });
 
 router.get('/:id', async function (req, res) {
-    if (isNaN(req.params.id)) { // if id is not a number
-        return res.send(HTTPStatus.BAD_REQUEST).end();
+    try{
+        const product = await ProductService.getById(req.params.id);
+        return res.send(product);
+    }catch(err){
+        res.send(err.message).end();
     }
-    const connection = await SqlProvider.getConnection();
-
-    const result = await connection.query('SELECT * FROM `products` where id=?', req.params.id);
-    const rows = result[0];
-
-    if (!rows[0]) {  // if no row is returned
-        return res.send(HTTPStatus.NOT_FOUND).end();
-    }
-
-    return res.send(rows[0]);
 });
 
 router.delete('/:id', async function (req, res) {
