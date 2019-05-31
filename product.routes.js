@@ -3,6 +3,7 @@ const router = express.Router();
 const SqlProvider = require('./sql.provider');
 const ProductService = require('./product.service');
 const HTTPStatus = require('http-status');
+const authMiddleware = require('./snipcartAuth.middleware');
 
 router.get('/', async function (req, res) {
     const connection = await SqlProvider.getConnection();
@@ -13,7 +14,9 @@ router.get('/', async function (req, res) {
     return res.send(rows);
 });
 
-router.post('/', async function (req, res) {
+router.post('/', authMiddleware,
+ async function (req, res) {
+
     const product = {
         name: req.body.name,
         price: req.body.price,
@@ -30,7 +33,8 @@ router.post('/', async function (req, res) {
     }
 
     return res.send(HTTPStatus.OK).end();
-});
+}
+);
 
 router.get('/:id', async function (req, res) {
     try {
@@ -58,7 +62,7 @@ router.delete('/:id', async function (req, res) {
     return res.send(result);
 });
 
-router.put('/:id', async function (req, res) {
+router.put('/:id', authMiddleware, async function (req, res) {
     if (isNaN(req.params.id)) {
         return res.send(HTTPStatus.BAD_REQUEST).end();
     }
@@ -88,7 +92,7 @@ router.put('/:id', async function (req, res) {
 });
 
 
-router.post('/:id/photos', async function (req, res) {
+router.post('/:id/photos', authMiddleware, async function (req, res) {
     if (isNaN(req.params.id) || !req.files.photo) {
         return res.send(HTTPStatus.BAD_REQUEST).end();
     }
