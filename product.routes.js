@@ -120,4 +120,8 @@ router.post('/:id/photos', authMiddleware, async function (req, res) {
     });
 });
 
+router.post('/webhook', async function (req, res) {
+   console.log(req.body); 
+});
+
 module.exports = router;
