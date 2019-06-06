@@ -15,25 +15,25 @@ router.get('/', async function (req, res) {
 });
 
 router.post('/', authMiddleware,
- async function (req, res) {
+    async function (req, res) {
 
-    const product = {
-        name: req.body.name,
-        price: req.body.price,
-        weight: req.body.weight
+        const product = {
+            name: req.body.name,
+            price: req.body.price,
+            weight: req.body.weight
+        }
+
+        const connection = await SqlProvider.getConnection();
+
+        const result = await connection.query('INSERT INTO `products` SET ?', product);
+        const insertedObject = result[0];
+
+        if (insertedObject.affectedRows === 0) {
+            return res.send(HTTPStatus.INTERNAL_SERVER_ERROR).end();
+        }
+
+        return res.send(HTTPStatus.OK).end();
     }
-
-    const connection = await SqlProvider.getConnection();
-
-    const result = await connection.query('INSERT INTO `products` SET ?', product);
-    const insertedObject = result[0];
-
-    if (insertedObject.affectedRows === 0) {
-        return res.send(HTTPStatus.INTERNAL_SERVER_ERROR).end();
-    }
-
-    return res.send(HTTPStatus.OK).end();
-}
 );
 
 router.get('/:id', async function (req, res) {
@@ -109,7 +109,7 @@ router.post('/:id/photos', authMiddleware, async function (req, res) {
                 thumbnailUrl: url
             },
             req.params.id]);
-            
+
         const udpatedObject = result[0];
 
         if (udpatedObject.affectedRows === 0) {
@@ -121,7 +121,14 @@ router.post('/:id/photos', authMiddleware, async function (req, res) {
 });
 
 router.post('/webhook', async function (req, res) {
-   console.log(req.body); 
+    if (req.body.eventName === "order.completed") {
+        req.body.content.items.forEach(function(item){
+            // increase item order count
+        });
+    }
+    
+    console.log(req.body);
+    return res.sendStatus(HTTPStatus.OK).end();
 });
 
 module.exports = router;

@@ -22,7 +22,7 @@ app.get('/', function (req, res) {
     res.render("home");
 });
 
-app.get('/product/:id', async function (req, res) {
+app.get('/products/:id', async function (req, res) {
     try {
         const product = await ProductService.getById(req.params.id);
         res.render("product", product);
